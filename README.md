@@ -1,10 +1,10 @@
 # PuzzleHacker - Juego Educativo de Hackeo y Matemáticas
 
-## 🎮 Descripción del Juego
+## Descripción del Juego
 
 PuzzleHacker es un juego educativo estilo "puzzle-hacker" donde los jugadores asumen el rol de un hacker ético que debe infiltrar diferentes sistemas resolviendo problemas matemáticos. Cada nivel representa un desafío de hackeo diferente, desde redes sociales hasta sistemas militares clasificados.
 
-## 🎯 Características Principales
+## Características Principales
 
 ### Concepto del Juego
 - **Temática**: Simulación de hackeo ético con interfaz estilo terminal
@@ -20,14 +20,14 @@ PuzzleHacker es un juego educativo estilo "puzzle-hacker" donde los jugadores as
 5. **Base Militar** - Integrales
 6. **CIA/Pentágono** - Teoría de conjuntos
 
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 - **Lenguaje**: Java SE 8+
 - **GUI**: Swing/Java2D
 - **Arquitectura**: MVC + State Machine Pattern
 - **Fuente**: Monospace (Consolas/Courier New)
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 PuzzleHacker/
@@ -58,7 +58,7 @@ PuzzleHacker/
 └─ README.md
 ```
 
-## 🎨 Características de la Interfaz
+## Características de la Interfaz
 
 ### Pantalla de Inicio (SplashState)
 - Logo ASCII del juego "PUZZLEHACKER"
@@ -88,7 +88,7 @@ PuzzleHacker/
 3. **Problema Matemático**: Desafío principal
 4. **Resultado**: Éxito o fracaso de la misión
 
-## 📚 Contenido Educativo
+## Contenido Educativo
 
 ### Nivel 1 - Red Social (★☆☆☆☆☆)
 - **Matemática**: Aritmética básica
@@ -120,7 +120,7 @@ PuzzleHacker/
 - **Conceptos**: Unión, intersección, complemento
 - **Ejemplo**: `|A ∩ B|` dados A y B
 
-## 🚀 Instalación y Ejecución
+## Instalación y Ejecución
 
 ### Requisitos
 - Java SE 8 o superior
@@ -143,7 +143,7 @@ java -cp bin com.puzzlehacker.main.Main
 2. Ejecutar la clase `Main.java`
 3. ¡Disfrutar del juego!
 
-## 🎮 Controles
+## Controles
 
 ### Menús
 - **↑↓**: Navegar opciones
@@ -165,7 +165,7 @@ java -cp bin com.puzzlehacker.main.Main
 - **PAGE UP/DOWN**: Desplazamiento rápido
 - **HOME/END**: Inicio/Final
 
-## 👥 Equipo de Desarrollo
+## Equipo de Desarrollo
 
 ### Desarrolladores
 - **Omar Alejandro Galvis Espitia**
@@ -192,7 +192,7 @@ java -cp bin com.puzzlehacker.main.Main
 **Jala University** - Programa de Ingeniería de Software  
 Proyecto Final - Curso de Programación Java (2025-1)
 
-## 🔧 Características Técnicas
+## Características Técnicas
 
 ### Optimizaciones Implementadas
 - **Separación lógica/renderizado**: Estados independientes
@@ -211,7 +211,7 @@ Proyecto Final - Curso de Programación Java (2025-1)
 - Configuraciones expandibles
 - Soporte multiidioma preparado
 
-## 🎯 Objetivos Educativos
+## Objetivos Educativos
 
 ### Programación
 - Programación orientada a objetos
@@ -234,21 +234,21 @@ Proyecto Final - Curso de Programación Java (2025-1)
 - Trabajo en equipo
 - Documentación de proyectos
 
-## 📝 Licencia
+## Licencia
 
 MIT License - Uso educativo libre  
 Copyright (c) 2025 Equipo PuzzleHacker
 
-## 🤝 Contribuciones
+## Contribuciones
 
 Este proyecto fue desarrollado con fines educativos para Jala University. Las contribuciones y mejoras son bienvenidas para fines educativos.
 
-## ⚠️ Disclaimer
+## Disclaimer
 
 PuzzleHacker es un juego educativo creado con fines puramente académicos. No promueve actividades ilegales reales y es una simulación educativa para aprender programación y matemáticas de manera interactiva.
 
 ---
 
-**¡Gracias por jugar PuzzleHacker!** 🎮✨
+**¡Gracias por jugar PuzzleHacker!** 
 
 Para más información: github.com/jala-university
