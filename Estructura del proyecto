@@ -1,23 +1,26 @@
 PuzzleHacker/
 ├─ src/
-│  └─ com/
-│     └─ puzzlehacker/
-│        ├─ main/
-│        │   └─ Main.java
-│        │
-│        ├─ core/
-│        │   ├─ Game.java
-│        │   ├─ StateManager.java
-│        │   └─ GameState.java
-│        │
-│        ├─ states/
-│        │   ├─ MenuState.java
-│        │   └─ PlayState.java
-│        │
-│        ├─ ui/
-│        │   └─ TerminalUI.java
-│        │
-│        └─ math/
-│            └─ MathProblemGenerator.java
+│  └─ com/puzzlehacker/
+│     ├─ main/
+│     │   └─ Main.java
+│     │
+│     ├─ core/
+│     │   ├─ Game.java
+│     │   ├─ StateManager.java
+│     │   └─ GameState.java
+│     │
+│     ├─ states/
+│     │   ├─ SplashState.java      (Pantalla inicial con barra de carga y “presione cualquier tecla”)
+│     │   ├─ MenuState.java        (Menú principal)
+│     │   ├─ PlayState.java        (Nivel de juego con problemas matemáticos + historia previa)
+│     │   ├─ SettingsState.java    (Ajustes: idioma + color de texto)
+│     │   └─ CreditsState.java     (Créditos con los nombres que diste)
+│     │
+│     ├─ ui/
+│     │   ├─ TerminalUI.java       (Consola estilo CMD, configurable en colores)
+│     │   └─ ProgressBarUI.java    (Barra de carga animada)
+│     │
+│     └─ math/
+│         └─ MathProblemGenerator.java
 │
 └─ README.md
