@@ -234,11 +234,6 @@ Proyecto Final - Curso de Programación Java (2025-1)
 - Trabajo en equipo
 - Documentación de proyectos
 
-## Licencia
-
-MIT License - Uso educativo libre  
-Copyright (c) 2025 Equipo PuzzleHacker
-
 ## Contribuciones
 
 Este proyecto fue desarrollado con fines educativos para Jala University. Las contribuciones y mejoras son bienvenidas para fines educativos.
