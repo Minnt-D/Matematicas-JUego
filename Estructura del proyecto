@@ -1,0 +1,23 @@
+PuzzleHacker/
+├─ src/
+│  └─ com/
+│     └─ puzzlehacker/
+│        ├─ main/
+│        │   └─ Main.java
+│        │
+│        ├─ core/
+│        │   ├─ Game.java
+│        │   ├─ StateManager.java
+│        │   └─ GameState.java
+│        │
+│        ├─ states/
+│        │   ├─ MenuState.java
+│        │   └─ PlayState.java
+│        │
+│        ├─ ui/
+│        │   └─ TerminalUI.java
+│        │
+│        └─ math/
+│            └─ MathProblemGenerator.java
+│
+└─ README.md
