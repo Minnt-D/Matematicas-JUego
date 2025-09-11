@@ -1,39 +1,45 @@
 PuzzleHacker/
 │
 ├── src/
-│   ├── com/puzzlehacker/core/          # Núcleo del juego
+│   ├── com/puzzlehacker/core/
 │   │   ├── Main.java                   # Punto de entrada
-│   │   ├── Game.java                   # Loop principal del juego
-│   │   ├── StateManager.java           # Controla estados
-│   │   ├── GameState.java              # Clase abstracta para estados
+│   │   ├── Game.java                   # Control principal
+│   │   ├── StateManager.java           # Manejo de estados
+│   │   ├── GameState.java              # Clase base para todos los estados
 │   │
 │   ├── com/puzzlehacker/states/        # Estados del juego
-│   │   ├── SplashState.java            # Pantalla inicial con barra de carga animada
+│   │   ├── SplashState.java            # Pantalla de carga (animada con barra y sonidos)
 │   │   ├── MenuState.java              # Menú principal
-│   │   ├── PlayState.java              # Juego (resolver problemas)
-│   │   ├── SettingsState.java          # Configuración (idioma, color de texto)
-│   │   ├── CreditsState.java           # Créditos del proyecto
+│   │   ├── PlayState.java              # Ejercicios matemáticos
+│   │   ├── SettingsState.java          # Configuración (idioma, color texto)
+│   │   ├── CreditsState.java           # Créditos
 │   │
-│   ├── com/puzzlehacker/ui/            # Interfaz estilo terminal
-│   │   ├── TerminalUI.java             # Consola tipo CMD (entrada/salida)
-│   │   ├── ProgressBarUI.java          # Barra de progreso animada
+│   ├── com/puzzlehacker/ui/            # Interfaz estilo Kali/Linux terminal
+│   │   ├── TerminalUI.java             # Simulación terminal (JTextPane + Scroll + estilos oscuros)
+│   │   ├── ProgressBarUI.java          # Barra de carga animada
+│   │   ├── ThemeManager.java           # Define el tema oscuro y los colores de texto
 │   │
-│   ├── com/puzzlehacker/math/          # Generador de problemas
-│   │   ├── Problem.java                # Objeto problema (pregunta, respuesta, pista)
-│   │   ├── MathProblemGenerator.java   # Genera 10 problemas por nivel
+│   ├── com/puzzlehacker/math/          # Generador de problemas matemáticos
+│   │   ├── Problem.java                # Modelo de problema
+│   │   ├── MathProblemGenerator.java   # Generador (sumas, logaritmos, conjuntos, integrales)
 │   │
-│   ├── com/puzzlehacker/audio/         # Manejo de sonidos
-│   │   ├── SoundPlayer.java            # Clase para reproducir efectos de sonido
+│   ├── com/puzzlehacker/audio/         # Sonidos
+│   │   ├── SoundPlayer.java            # Reproductor de efectos
 │   │
-│   └── com/puzzlehacker/utils/         # Utilidades generales
-│       ├── Colors.java                 # Colores (verde hacker, blanco, rojo, etc.)
-│       ├── LanguageManager.java        # Manejador de idiomas (es/en)
+│   └── com/puzzlehacker/utils/         # Utilidades
+│       ├── Colors.java                 # Paleta de colores hacker (verde, blanco, azul, rojo, rosa)
+│       ├── LanguageManager.java        # Cambia entre inglés/español dinámicamente
+│       ├── EasterEggManager.java       # Código oculto desbloqueable con cada ejercicio
 │
-├── assets/                             # Recursos externos
+├── assets/                             # Recursos
 │   ├── sounds/
 │   │   ├── keypress.wav
-│   │   ├── error.wav
 │   │   ├── success.wav
+│   │   ├── error.wav
 │   │   ├── loading.wav
+│   ├── easteregg/
+│   │   ├── hidden_code_1.txt
+│   │   ├── hidden_code_2.txt
+│   │   ├── hidden_code_final.txt
 │
-└── README.md                           # Descripción del proyecto
+└── README.md
