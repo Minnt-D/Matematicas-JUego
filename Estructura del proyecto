@@ -1,26 +1,39 @@
 PuzzleHacker/
-├─ src/
-│  └─ com/puzzlehacker/
-│     ├─ main/
-│     │   └─ Main.java
-│     │
-│     ├─ core/
-│     │   ├─ Game.java
-│     │   ├─ StateManager.java
-│     │   └─ GameState.java
-│     │
-│     ├─ states/
-│     │   ├─ SplashState.java      (Pantalla inicial con barra de carga y “presione cualquier tecla”)
-│     │   ├─ MenuState.java        (Menú principal)
-│     │   ├─ PlayState.java        (Nivel de juego con problemas matemáticos + historia previa)
-│     │   ├─ SettingsState.java    (Ajustes: idioma + color de texto)
-│     │   └─ CreditsState.java     (Créditos con los nombres que diste)
-│     │
-│     ├─ ui/
-│     │   ├─ TerminalUI.java       (Consola estilo CMD, configurable en colores)
-│     │   └─ ProgressBarUI.java    (Barra de carga animada)
-│     │
-│     └─ math/
-│         └─ MathProblemGenerator.java
 │
-└─ README.md
+├── src/
+│   ├── com/puzzlehacker/core/          # Núcleo del juego
+│   │   ├── Main.java                   # Punto de entrada
+│   │   ├── Game.java                   # Loop principal del juego
+│   │   ├── StateManager.java           # Controla estados
+│   │   ├── GameState.java              # Clase abstracta para estados
+│   │
+│   ├── com/puzzlehacker/states/        # Estados del juego
+│   │   ├── SplashState.java            # Pantalla inicial con barra de carga animada
+│   │   ├── MenuState.java              # Menú principal
+│   │   ├── PlayState.java              # Juego (resolver problemas)
+│   │   ├── SettingsState.java          # Configuración (idioma, color de texto)
+│   │   ├── CreditsState.java           # Créditos del proyecto
+│   │
+│   ├── com/puzzlehacker/ui/            # Interfaz estilo terminal
+│   │   ├── TerminalUI.java             # Consola tipo CMD (entrada/salida)
+│   │   ├── ProgressBarUI.java          # Barra de progreso animada
+│   │
+│   ├── com/puzzlehacker/math/          # Generador de problemas
+│   │   ├── Problem.java                # Objeto problema (pregunta, respuesta, pista)
+│   │   ├── MathProblemGenerator.java   # Genera 10 problemas por nivel
+│   │
+│   ├── com/puzzlehacker/audio/         # Manejo de sonidos
+│   │   ├── SoundPlayer.java            # Clase para reproducir efectos de sonido
+│   │
+│   └── com/puzzlehacker/utils/         # Utilidades generales
+│       ├── Colors.java                 # Colores (verde hacker, blanco, rojo, etc.)
+│       ├── LanguageManager.java        # Manejador de idiomas (es/en)
+│
+├── assets/                             # Recursos externos
+│   ├── sounds/
+│   │   ├── keypress.wav
+│   │   ├── error.wav
+│   │   ├── success.wav
+│   │   ├── loading.wav
+│
+└── README.md                           # Descripción del proyecto
