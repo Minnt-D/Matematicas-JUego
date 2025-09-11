@@ -15,7 +15,7 @@ PuzzleHacker es un juego educativo estilo "puzzle-hacker" donde los jugadores as
 ### Niveles de Dificultad
 1. **Red Social** - Aritmética básica
 2. **WiFi Corporativo** - Secuencias numéricas  
-3. **Sistema POS** - Sumatorias (∑)
+3. **Sistema POS** - Sumatorias ( ∑ )
 4. **Banco** - Logaritmos
 5. **Base Militar** - Integrales
 6. **CIA/Pentágono** - Teoría de conjuntos
