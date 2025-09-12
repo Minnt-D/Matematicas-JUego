@@ -1,89 +1,22 @@
-// src/com/puzzlehacker/states/CreditsState.java
 package com.puzzlehacker.states;
 
-import com.puzzlehacker.core.GameState;
 import com.puzzlehacker.core.StateManager;
 
-import java.awt.event.KeyEvent;
+import java.awt.*;
 
 public class CreditsState extends GameState {
-    private int scrollOffset = 0;
-    private final String[] creditLines = {
+
+    private String[] credits = {
+            "=== CREDITOS / CREDITS ===",
             "",
-            "  ╔══════════════════════════════════════════════════════════╗",
-            "  ║                       CRÉDITOS                          ║",
-            "  ╚══════════════════════════════════════════════════════════╝",
+            "Omar Alejandro Galvis Espitia",
+            "Julio Cesar Ramirez Vega",
+            "Eli Santiago Lopez Mahecha",
+            "Daphne Geysi Rivera Flores",
             "",
-            "  PUZZLEHACKER v1.0",
-            "  Un proyecto educativo de programación y matemáticas",
+            "Un proyecto para Jala University",
             "",
-            "  ════════════════════════════════════════════════════════════",
-            "  DESARROLLADORES:",
-            "  ════════════════════════════════════════════════════════════",
-            "",
-            "  Omar Alejandro Galvis Espitia",
-            "",
-            "  Julio César Ramírez Vega",
-            "",
-            "  Eli Santiago López Mahecha",
-            "",
-            "  Daphne Geysi Rivera Flores",
-            "",
-            "  ════════════════════════════════════════════════════════════",
-            "  INSTITUCIÓN EDUCATIVA:",
-            "  ════════════════════════════════════════════════════════════",
-            "",
-            "  JALA UNIVERSITY",
-            "  Laboratorio 1 - Matematicas Discretas",
-            "  Semestre: 2025-1 (0725)",
-            "",
-            "  ════════════════════════════════════════════════════════════",
-            "  TECNOLOGÍAS UTILIZADAS:",
-            "  ════════════════════════════════════════════════════════════",
-            "",
-            "  • Java SE 8+",
-            "  • Swing / Java2D",
-            "  • Arquitectura MVC",
-            "  • Patrón State Machine",
-            "",
-            "  ════════════════════════════════════════════════════════════",
-            "  AGRADECIMIENTOS ESPECIALES:",
-            "  ════════════════════════════════════════════════════════════",
-            "",
-            "  A mis gatos",
-            "  y chatgpt y a karen no.",
-            "",
-            "  ════════════════════════════════════════════════════════════",
-            "  OBJETIVO EDUCATIVO:",
-            "  ════════════════════════════════════════════════════════════",
-            "",
-            "  PuzzleHacker fue creado con fines puramente educativos",
-            "  para demostrar conceptos de:",
-            "",
-            "  • Programación orientada a objetos",
-            "  • Matemáticas discretas",
-            "  • Lógica de programación",
-            "  • Trabajo en equipo",
-            "",
-            "  Este juego no promueve actividades ilegales reales.",
-            "  Es una simulación educativa para aprender programación",
-            "  y matemáticas de manera divertida e interactiva.",
-            "",
-            "  ¡Gracias por jugar PuzzleHacker!",
-            "",
-            "  Esperamos que haya sido una experiencia educativa",
-            "  divertida y que hayas aprendido algo nuevo sobre",
-            "  programación y matemáticas.",
-            "",
-            "  Para más proyectos educativos como este,",
-            "  visita: github.com/jala-university",
-            "",
-            "  ════════════════════════════════════════════════════════════",
-            "",
-            "  [ESC] Volver al menú principal",
-            "  [↑↓] Desplazar",
-            "",
-            ""
+            "Presione ENTER para volver al menu..."
     };
 
     public CreditsState(StateManager stateManager) {
@@ -91,82 +24,34 @@ public class CreditsState extends GameState {
     }
 
     @Override
-    public void enter() {
-        scrollOffset = 0;
-        showCredits();
-    }
-
-    private void showCredits() {
-        stateManager.getTerminal().clearScreen();
-
-        // Mostrar líneas visibles según el offset de scroll
-        int visibleLines = 25; // Aproximadamente las líneas visibles en pantalla
-
-        for (int i = 0; i < visibleLines && (scrollOffset + i) < creditLines.length; i++) {
-            int lineIndex = scrollOffset + i;
-            if (lineIndex >= 0 && lineIndex < creditLines.length) {
-                stateManager.getTerminal().printLine(creditLines[lineIndex]);
-            }
-        }
+    public String getName() {
+        return "Credits";
     }
 
     @Override
     public void update() {
-        // Los créditos pueden tener auto-scroll si se desea
+        // Nada que actualizar
     }
 
     @Override
-    public void render() {
-        // La renderización se maneja en TerminalUI
-    }
+    public void render(Graphics2D g2d) {
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect(0, 0, 700, 500);
 
-    @Override
-    public void exit() {
-        // Limpiar recursos si es necesario
-    }
+        g2d.setFont(new Font("Monospaced", Font.PLAIN, 18));
+        g2d.setColor(new Color(0, 255, 70)); // verde hacker
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:
-                if (scrollOffset > 0) {
-                    scrollOffset--;
-                    showCredits();
-                }
-                break;
-
-            case KeyEvent.VK_DOWN:
-                if (scrollOffset < creditLines.length - 20) {
-                    scrollOffset++;
-                    showCredits();
-                }
-                break;
-
-            case KeyEvent.VK_PAGE_UP:
-                scrollOffset = Math.max(0, scrollOffset - 10);
-                showCredits();
-                break;
-
-            case KeyEvent.VK_PAGE_DOWN:
-                scrollOffset = Math.min(creditLines.length - 20, scrollOffset + 10);
-                showCredits();
-                break;
-
-            case KeyEvent.VK_HOME:
-                scrollOffset = 0;
-                showCredits();
-                break;
-
-            case KeyEvent.VK_END:
-                scrollOffset = Math.max(0, creditLines.length - 20);
-                showCredits();
-                break;
-
-            case KeyEvent.VK_ESCAPE:
-            case KeyEvent.VK_ENTER:
-                stateManager.setState(new MenuState(stateManager));
-                break;
+        int y = 80;
+        for (String line : credits) {
+            g2d.drawString(line, 120, y);
+            y += 35;
         }
     }
 
+    @Override
+    public void handleCommand(String command) {
+        if ("ENTER".equals(command)) {
+            stateManager.setState("Menu");
+        }
+    }
 }

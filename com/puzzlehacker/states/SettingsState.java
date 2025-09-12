@@ -1,157 +1,102 @@
-// src/com/puzzlehacker/states/SettingsState.java
 package com.puzzlehacker.states;
 
-import com.puzzlehacker.core.GameState;
 import com.puzzlehacker.core.StateManager;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class SettingsState extends GameState {
-    private int selectedOption = 0;
-    private final String[] settingsOptions = {"IDIOMA", "COLOR DE TEXTO", "VOLVER"};
-    private final String[] languages = {"Español", "English"};
-    private final String[] colors = {"BLANCO", "VERDE", "AZUL", "ROJO", "ROSA"};
-    private int currentLanguageIndex;
-    private int currentColorIndex;
+
+    private String[] colors = {"WHITE", "GREEN", "BLUE", "RED", "PINK"};
+    private Color[] colorValues = {
+            Color.WHITE,
+            new Color(0, 255, 70), // verde hacker
+            Color.CYAN,
+            Color.RED,
+            Color.PINK
+    };
+
+    private String[] languages = {"ESPAÑOL", "ENGLISH"};
+    private int selectedColor = 0;
+    private int selectedLanguage = 0;
+
+    private int optionIndex = 0;
+    private String[] options = {"Idioma / Language", "Color de Texto", "Volver"};
 
     public SettingsState(StateManager stateManager) {
         super(stateManager);
-
-        // Inicializar índices actuales
-        String currentLang = stateManager.getGame().getCurrentLanguage();
-        currentLanguageIndex = currentLang.equals("en") ? 1 : 0;
-
-        String currentColor = stateManager.getGame().getCurrentTextColor();
-        switch (currentColor) {
-            case "WHITE": currentColorIndex = 0; break;
-            case "GREEN": currentColorIndex = 1; break;
-            case "BLUE": currentColorIndex = 2; break;
-            case "RED": currentColorIndex = 3; break;
-            case "PINK": currentColorIndex = 4; break;
-            default: currentColorIndex = 1; // Verde por defecto
-        }
     }
 
     @Override
-    public void enter() {
-        showSettings();
-    }
-
-    private void showSettings() {
-        stateManager.getTerminal().clearScreen();
-        stateManager.getTerminal().printLine("");
-        stateManager.getTerminal().printLine("  ╔══════════════════════════════════════════════════════════╗");
-        stateManager.getTerminal().printLine("  ║                       AJUSTES                            ║");
-        stateManager.getTerminal().printLine("  ╚══════════════════════════════════════════════════════════╝");
-        stateManager.getTerminal().printLine("");
-        stateManager.getTerminal().printLine("  Configuración del sistema:");
-        stateManager.getTerminal().printLine("");
-
-        for (int i = 0; i < settingsOptions.length; i++) {
-            String prefix = (i == selectedOption) ? "  > " : "    ";
-            String option = settingsOptions[i];
-            String value = "";
-
-            if (option.equals("IDIOMA")) {
-                value = " [" + languages[currentLanguageIndex] + "]";
-            } else if (option.equals("COLOR DE TEXTO")) {
-                value = " [" + colors[currentColorIndex] + "]";
-            }
-
-            stateManager.getTerminal().printLine(prefix + option + value);
-        }
-
-        stateManager.getTerminal().printLine("");
-        stateManager.getTerminal().printLine("  ┌────────────────────────────────────────────────────────┐");
-        stateManager.getTerminal().printLine("  │ ↑↓ Navegar  ←→ Cambiar valor  ENTER Confirmar  ESC Salir │");
-        stateManager.getTerminal().printLine("  └────────────────────────────────────────────────────────┘");
-        stateManager.getTerminal().printLine("");
-
-        // Mostrar información adicional según la opción seleccionada
-        switch (selectedOption) {
-            case 0: // IDIOMA
-                stateManager.getTerminal().printLine("  Cambia el idioma de la interfaz del juego.");
-                stateManager.getTerminal().printLine("  Disponible: Español, English");
-                break;
-            case 1: // COLOR DE TEXTO
-                stateManager.getTerminal().printLine("  Personaliza el color del texto de la terminal.");
-                stateManager.getTerminal().printLine("  Colores: Blanco, Verde hacker, Azul, Rojo, Rosa");
-                break;
-            case 2: // VOLVER
-                stateManager.getTerminal().printLine("  Regresar al menú principal.");
-                break;
-        }
+    public String getName() {
+        return "Settings";
     }
 
     @Override
     public void update() {
-        // Los ajustes no necesitan actualizaciones continuas
+        // No hay lógica compleja, solo redibujar
     }
 
     @Override
-    public void render() {
-        // La renderización se maneja en TerminalUI
+    public void render(Graphics2D g2d) {
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect(0, 0, 700, 500);
+
+        g2d.setFont(new Font("Monospaced", Font.BOLD, 20));
+        g2d.setColor(colorValues[selectedColor]);
+        g2d.drawString("=== CONFIGURACIÓN / SETTINGS ===", 180, 60);
+
+        g2d.setFont(new Font("Monospaced", Font.PLAIN, 16));
+
+        for (int i = 0; i < options.length; i++) {
+            if (i == optionIndex) {
+                g2d.setColor(Color.YELLOW);
+            } else {
+                g2d.setColor(colorValues[selectedColor]);
+            }
+
+            int y = 150 + i * 40;
+            g2d.drawString(options[i], 100, y);
+
+            if (i == 0) {
+                g2d.drawString(": " + languages[selectedLanguage], 400, y);
+            } else if (i == 1) {
+                g2d.drawString(": " + colors[selectedColor], 400, y);
+            }
+        }
     }
 
     @Override
-    public void exit() {
-        // Guardar configuraciones si fuera necesario
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:
-                selectedOption = (selectedOption - 1 + settingsOptions.length) % settingsOptions.length;
-                showSettings();
+    public void handleCommand(String command) {
+        switch (command) {
+            case "UP":
+                optionIndex = (optionIndex - 1 + options.length) % options.length;
                 break;
-
-            case KeyEvent.VK_DOWN:
-                selectedOption = (selectedOption + 1) % settingsOptions.length;
-                showSettings();
+            case "DOWN":
+                optionIndex = (optionIndex + 1) % options.length;
                 break;
-
-            case KeyEvent.VK_LEFT:
-                if (selectedOption == 0) { // IDIOMA
-                    currentLanguageIndex = (currentLanguageIndex - 1 + languages.length) % languages.length;
-                    updateLanguage();
-                } else if (selectedOption == 1) { // COLOR
-                    currentColorIndex = (currentColorIndex - 1 + colors.length) % colors.length;
-                    updateTextColor();
-                }
-                showSettings();
-                break;
-
-            case KeyEvent.VK_RIGHT:
-                if (selectedOption == 0) { // IDIOMA
-                    currentLanguageIndex = (currentLanguageIndex + 1) % languages.length;
-                    updateLanguage();
-                } else if (selectedOption == 1) { // COLOR
-                    currentColorIndex = (currentColorIndex + 1) % colors.length;
-                    updateTextColor();
-                }
-                showSettings();
-                break;
-
-            case KeyEvent.VK_ENTER:
-                if (selectedOption == 2) { // VOLVER
-                    stateManager.setState(new MenuState(stateManager));
+            case "ENTER":
+                if (optionIndex == 0) {
+                    // Cambiar idioma
+                    selectedLanguage = (selectedLanguage + 1) % languages.length;
+                } else if (optionIndex == 1) {
+                    // Cambiar color
+                    selectedColor = (selectedColor + 1) % colors.length;
+                } else if (optionIndex == 2) {
+                    // Volver al menú
+                    stateManager.setState("Menu");
                 }
                 break;
-
-            case KeyEvent.VK_ESCAPE:
-                stateManager.setState(new MenuState(stateManager));
+            default:
                 break;
         }
     }
 
-    private void updateLanguage() {
-        String newLang = currentLanguageIndex == 0 ? "es" : "en";
-        stateManager.getGame().setCurrentLanguage(newLang);
+    public Color getSelectedColor() {
+        return colorValues[selectedColor];
     }
 
-    private void updateTextColor() {
-        String[] colorCodes = {"WHITE", "GREEN", "BLUE", "RED", "PINK"};
-        stateManager.getGame().setCurrentTextColor(colorCodes[currentColorIndex]);
+    public String getSelectedLanguage() {
+        return languages[selectedLanguage];
     }
 }

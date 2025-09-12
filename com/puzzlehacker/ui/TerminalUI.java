@@ -1,160 +1,254 @@
-// src/com/puzzlehacker/ui/TerminalUI.java
 package com.puzzlehacker.ui;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.event.*;
+import java.util.LinkedList;
+import java.util.Queue;
 
+/**
+ * TerminalUI - una terminal estilo Kali/Linux basada en Swing.
+ * - Fondo oscuro
+ * - Texto monoespaciado
+ * - Scroll con JScrollPane
+ * - Efecto typewriter opcional
+ *
+ * Uso:
+ * TerminalUI t = new TerminalUI(700, 500, input -> state.handleInput(input));
+ * t.println("Bienvenido", false);
+ * t.println("Cargando...", true); // con efecto typewriter
+ */
 public class TerminalUI extends JPanel {
-    private List<String> lines;
-    private Font terminalFont;
-    private Color backgroundColor;
-    private Color textColor;
-    private String currentInputLine = "";
-    private int maxLines = 25;
 
-    public TerminalUI() {
-        lines = new ArrayList<>();
-        setupUI();
-        setTextColor("GREEN"); // Verde por defecto
+    public interface TerminalInputListener {
+        void onInput(String input);
     }
 
-    private void setupUI() {
+    private final JTextPane textPane;
+    private final JTextField inputField;
+    private final JScrollPane scrollPane;
+
+    private Color textColor = new Color(0x00FF66); // verde hacker por defecto
+    private SimpleAttributeSet textAttr;
+
+    // Typewriter
+    private final Queue<String> printQueue = new LinkedList<>();
+    private Timer typewriterTimer;
+    private int typewriterIndex;     // índice dentro de la cadena actual
+    private String currentTyping;    // cadena en curso
+    private boolean typewriterEnabled = true;
+    private int typewriterDelay = 8; // ms por carácter (ajustable)
+
+    private TerminalInputListener listener;
+
+    public TerminalUI(int width, int height, TerminalInputListener listener) {
+        this.listener = listener;
+        setLayout(new BorderLayout());
+        setPreferredSize(new Dimension(width, height));
         setBackground(Color.BLACK);
-        backgroundColor = Color.BLACK;
 
-        // Fuente monospace para simular terminal
-        try {
-            terminalFont = new Font("Consolas", Font.PLAIN, 14);
-        } catch (Exception e) {
-            try {
-                terminalFont = new Font("Courier New", Font.PLAIN, 14);
-            } catch (Exception e2) {
-                terminalFont = new Font(Font.MONOSPACED, Font.PLAIN, 14);
+        // TextPane (salida)
+        textPane = new JTextPane();
+        textPane.setEditable(false);
+        textPane.setBackground(Color.BLACK);
+        textPane.setFont(new Font("Monospaced", Font.PLAIN, 13));
+        textPane.setForeground(textColor);
+
+        // Atributos para texto coloreado
+        textAttr = new SimpleAttributeSet();
+        StyleConstants.setForeground(textAttr, textColor);
+        StyleConstants.setFontFamily(textAttr, "Monospaced");
+        StyleConstants.setFontSize(textAttr, 13);
+
+        // ScrollPane
+        scrollPane = new JScrollPane(textPane);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // scroll más suave
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Input field (entrada)
+        inputField = new JTextField();
+        inputField.setBackground(Color.BLACK);
+        inputField.setForeground(textColor);
+        inputField.setCaretColor(textColor);
+        inputField.setFont(new Font("Monospaced", Font.PLAIN, 13));
+        inputField.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(0x202020)));
+        inputField.addActionListener(e -> {
+            String text = inputField.getText();
+            if (text == null) text = "";
+            // Imprime en la terminal la línea de entrada (estética)
+            println("> " + text, false);
+            inputField.setText("");
+            if (listener != null) listener.onInput(text);
+        });
+
+        // KeyListener opcional para detectar teclas especiales (p. ej. para sonidos)
+        inputField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                // ejemplo: si quisieras mapear ESC para volver:
+                // if (e.getKeyCode() == KeyEvent.VK_ESCAPE) ...
             }
-        }
+        });
 
-        setFocusable(false);
+        add(inputField, BorderLayout.SOUTH);
+
+        // Inicializar timer del typewriter (no arrancar aún)
+        initTypewriterTimer();
     }
 
-    public void setTextColor(String colorName) {
-        switch (colorName.toUpperCase()) {
-            case "WHITE":
-                textColor = Color.WHITE;
-                break;
-            case "GREEN":
-                textColor = new Color(0, 255, 0); // Verde brillante estilo hacker
-                break;
-            case "BLUE":
-                textColor = new Color(0, 150, 255); // Azul brillante
-                break;
-            case "RED":
-                textColor = new Color(255, 50, 50); // Rojo brillante
-                break;
-            case "PINK":
-                textColor = new Color(255, 100, 200); // Rosa brillante
-                break;
-            default:
-                textColor = new Color(0, 255, 0); // Verde por defecto
-        }
-        repaint();
+    private void initTypewriterTimer() {
+        typewriterTimer = new Timer(typewriterDelay, e -> {
+            if (currentTyping == null) {
+                // no hay texto en curso: tomar siguiente de la cola
+                currentTyping = printQueue.poll();
+                typewriterIndex = 0;
+                if (currentTyping == null) {
+                    typewriterTimer.stop();
+                    return;
+                }
+            }
+            // insertar un carácter más
+            char c = currentTyping.charAt(typewriterIndex);
+            appendToPane(String.valueOf(c), textAttr);
+            typewriterIndex++;
+            if (typewriterIndex >= currentTyping.length()) {
+                // terminar la línea, añadir salto de línea
+                appendToPane("\n", textAttr);
+                currentTyping = null;
+            }
+        });
+        typewriterTimer.setRepeats(true);
     }
 
-    public void clearScreen() {
-        lines.clear();
-        currentInputLine = "";
-        repaint();
-    }
-
-    public void printLine(String line) {
-        lines.add(line);
-
-        // Limitar número de líneas para evitar overflow
-        while (lines.size() > maxLines) {
-            lines.remove(0);
-        }
-
-        repaint();
-    }
-
-    public void print(String text) {
-        if (lines.isEmpty()) {
-            lines.add(text);
+    /**
+     * Imprime una línea en la terminal.
+     *
+     * @param text       Texto a imprimir (no añade '\n' si typewriter activo, lo maneja internamente).
+     * @param typewriter Si true, usa efecto typewriter (animado). Si false, imprime directamente.
+     */
+    public synchronized void println(String text, boolean typewriter) {
+        if (text == null) text = "null";
+        if (typewriter && typewriterEnabled) {
+            // Encolar para animación
+            printQueue.add(text);
+            if (!typewriterTimer.isRunning()) {
+                typewriterTimer.start();
+            }
         } else {
-            int lastIndex = lines.size() - 1;
-            lines.set(lastIndex, lines.get(lastIndex) + text);
+            appendToPane(text + "\n", textAttr);
         }
-        repaint();
+        // Asegurar scroll abajo
+        SwingUtilities.invokeLater(() -> textPane.setCaretPosition(textPane.getDocument().getLength()));
     }
 
-    public void updateInputLine(String inputLine) {
-        currentInputLine = inputLine;
-        repaint();
+    /**
+     * Imprime sin salto de línea (útil para prompts).
+     */
+    public synchronized void print(String text) {
+        if (text == null) text = "null";
+        appendToPane(text, textAttr);
+        SwingUtilities.invokeLater(() -> textPane.setCaretPosition(textPane.getDocument().getLength()));
     }
 
-    public void updateMenuCursor(int selectedOption, String[] options, boolean showCursor) {
-        // Método para actualizar cursor del menú sin redibujar todo
-        // Se podría optimizar más, pero para simplicidad redibujamos
-        repaint();
+    /**
+     * Limpia la terminal.
+     */
+    public void clear() {
+        SwingUtilities.invokeLater(() -> {
+            textPane.setText("");
+        });
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
+    /**
+     * Pone foco en la entrada de texto.
+     */
+    public void focusInput() {
+        SwingUtilities.invokeLater(() -> inputField.requestFocusInWindow());
+    }
 
-        // Antialiasing para texto más suave
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    /**
+     * Cambia el color del texto en caliente.
+     */
+    public void setTextColor(Color c) {
+        if (c == null) return;
+        this.textColor = c;
+        SwingUtilities.invokeLater(() -> {
+            textPane.setForeground(c);
+            inputField.setForeground(c);
+            inputField.setCaretColor(c);
+            StyleConstants.setForeground(textAttr, c);
+        });
+    }
 
-        g2d.setColor(backgroundColor);
-        g2d.fillRect(0, 0, getWidth(), getHeight());
-
-        g2d.setColor(textColor);
-        g2d.setFont(terminalFont);
-
-        FontMetrics fm = g2d.getFontMetrics();
-        int lineHeight = fm.getHeight();
-        int startY = 20;
-
-        // Dibujar todas las líneas
-        for (int i = 0; i < lines.size(); i++) {
-            String line = lines.get(i);
-            int y = startY + (i * lineHeight);
-
-            // Solo dibujar líneas visibles
-            if (y > 0 && y < getHeight()) {
-                g2d.drawString(line, 10, y);
+    /**
+     * Habilita o deshabilita el efecto typewriter.
+     */
+    public void setTypewriterEnabled(boolean enabled) {
+        this.typewriterEnabled = enabled;
+        if (!enabled) {
+            // vaciar cola y detener timer, imprimir todo inmediatamente
+            if (typewriterTimer.isRunning()) typewriterTimer.stop();
+            while (!printQueue.isEmpty()) {
+                appendToPane(printQueue.poll() + "\n", textAttr);
             }
+            currentTyping = null;
         }
+    }
 
-        // Dibujar línea de entrada actual si existe
-        if (!currentInputLine.isEmpty()) {
-            int y = startY + (lines.size() * lineHeight);
-            if (y > 0 && y < getHeight()) {
-                g2d.drawString(currentInputLine, 10, y);
+    /**
+     * Ajusta el delay (ms) entre caracteres del typewriter.
+     */
+    public void setTypewriterDelay(int ms) {
+        if (ms < 1) ms = 1;
+        typewriterDelay = ms;
+        typewriterTimer.setDelay(typewriterDelay);
+    }
+
+    /**
+     * Asigna un listener para recibir los inputs del usuario.
+     */
+    public void setOnInput(TerminalInputListener listener) {
+        this.listener = listener;
+    }
+
+    /**
+     * Inserta texto en el JTextPane con formato (seguro en EDT).
+     */
+    private void appendToPane(String msg, AttributeSet attr) {
+        SwingUtilities.invokeLater(() -> {
+            Document doc = textPane.getDocument();
+            try {
+                doc.insertString(doc.getLength(), msg, attr);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
             }
+            textPane.setCaretPosition(doc.getLength());
+        });
+    }
+
+    /**
+     * Devuelve el contenido de la terminal (útil para guardar logs o easter eggs).
+     */
+    public String getContent() {
+        try {
+            return textPane.getDocument().getText(0, textPane.getDocument().getLength());
+        } catch (BadLocationException e) {
+            return "";
         }
-
-        // Efecto de escanlines opcional (comentado para rendimiento)
-        /*
-        g2d.setColor(new Color(0, 255, 0, 10));
-        for (int y = 0; y < getHeight(); y += 2) {
-            g2d.drawLine(0, y, getWidth(), y);
-        }
-        */
     }
 
-    public Color getTextColor() {
-        return textColor;
-    }
-
-    public int getMaxLines() {
-        return maxLines;
-    }
-
-    public void setMaxLines(int maxLines) {
-        this.maxLines = maxLines;
+    /**
+     * Cambia la fuente monoespaciada (opcional).
+     */
+    public void setTerminalFont(Font font) {
+        if (font == null) return;
+        SwingUtilities.invokeLater(() -> {
+            textPane.setFont(font);
+            inputField.setFont(font);
+            StyleConstants.setFontFamily(textAttr, font.getFamily());
+            StyleConstants.setFontSize(textAttr, font.getSize());
+        });
     }
 }
