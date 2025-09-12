@@ -1,21 +1,38 @@
-// src/com/puzzlehacker/core/GameState.java
-package com.puzzlehacker.core;
+package com.puzzlehacker.states;
 
-import java.awt.event.KeyEvent;
+import com.puzzlehacker.core.StateManager;
+import java.awt.Graphics2D;
 
 public abstract class GameState {
+
     protected StateManager stateManager;
 
     public GameState(StateManager stateManager) {
         this.stateManager = stateManager;
     }
 
-    public abstract void enter();
-    public abstract void update();
-    public abstract void render();
-    public abstract void exit();
+    /**
+     * Nombre del estado, usado en StateManager
+     */
+    public abstract String getName();
 
-    public void keyTyped(KeyEvent e) {}
-    public void keyPressed(KeyEvent e) {}
-    public void keyReleased(KeyEvent e) {}
+    /**
+     * Se ejecuta al entrar al estado (inicialización, reset de variables, etc.)
+     */
+    public abstract void enter();
+
+    /**
+     * Actualiza la lógica del estado (animaciones, timers, etc.)
+     */
+    public abstract void update();
+
+    /**
+     * Renderiza la interfaz del estado
+     */
+    public abstract void render(Graphics2D g2d);
+
+    /**
+     * Manejo de entrada de texto o comandos desde TerminalUI
+     */
+    public abstract void handleInput(String input);
 }

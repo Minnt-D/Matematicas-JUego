@@ -1,112 +1,88 @@
-// src/com/puzzlehacker/states/SplashState.java
 package com.puzzlehacker.states;
 
-import com.puzzlehacker.core.GameState;
 import com.puzzlehacker.core.StateManager;
 import com.puzzlehacker.ui.ProgressBarUI;
 
+import java.awt.*;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.*;
 
 public class SplashState extends GameState {
+
+    private boolean loadingComplete;
+    private int progress;
     private ProgressBarUI progressBar;
-    private boolean loadingComplete = false;
-    private boolean keyPressed = false;
-    private long startTime;
+
+    private Timer loadingTimer;
 
     public SplashState(StateManager stateManager) {
         super(stateManager);
+        this.progress = 0;
+        this.loadingComplete = false;
+        this.progressBar = new ProgressBarUI(500, 20); // ancho y alto de la barra
+    }
+
+    @Override
+    public String getName() {
+        return "Splash";
     }
 
     @Override
     public void enter() {
-        startTime = System.currentTimeMillis();
-        progressBar = new ProgressBarUI();
+        progress = 0;
+        loadingComplete = false;
 
-        stateManager.getTerminal().clearScreen();
-        showTitle();
-
-        // Simular carga de archivos
-        new Thread(() -> {
-            try {
-                String[] files = {
-                        "kernel32.dll", "user32.dll", "ntdll.dll",
-                        "advapi32.dll", "shell32.dll", "msvcrt.dll",
-                        "crypto_engine.sys", "network_stack.dll",
-                        "gui_framework.jar", "math_processor.bin",
-                        "terminal_emulator.exe", "security_bypass.dll"
-                };
-
-                for (int i = 0; i < files.length; i++) {
-                    Thread.sleep(200 + (int)(Math.random() * 300));
-                    int progress = (i + 1) * 100 / files.length;
-                    updateProgress(files[i], progress);
-                }
-
-                Thread.sleep(500);
+        // Timer para simular carga animada
+        loadingTimer = new Timer(50, e -> {
+            progress += 2;
+            if (progress >= 100) {
+                progress = 100;
                 loadingComplete = true;
-                showPressAnyKey();
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                loadingTimer.stop();
             }
-        }).start();
-    }
+        });
+        loadingTimer.start();
 
-    private void showTitle() {
-        stateManager.getTerminal().printLine("");
-        stateManager.getTerminal().printLine("  ██████╗ ██╗   ██╗███████╗███████╗██╗     ███████╗");
-        stateManager.getTerminal().printLine("  ██╔══██╗██║   ██║╚══███╔╝╚══███╔╝██║     ██╔════╝");
-        stateManager.getTerminal().printLine("  ██████╔╝██║   ██║  ███╔╝   ███╔╝ ██║     █████╗  ");
-        stateManager.getTerminal().printLine("  ██╔═══╝ ██║   ██║ ███╔╝   ███╔╝  ██║     ██╔══╝  ");
-        stateManager.getTerminal().printLine("  ██║     ╚██████╔╝███████╗███████╗███████╗███████╗");
-        stateManager.getTerminal().printLine("  ╚═╝      ╚═════╝ ╚══════╝╚══════╝╚══════╝╚══════╝");
-        stateManager.getTerminal().printLine("");
-        stateManager.getTerminal().printLine("  ██╗  ██╗ █████╗  ██████╗██╗  ██╗███████╗██████╗ ");
-        stateManager.getTerminal().printLine("  ██║  ██║██╔══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗");
-        stateManager.getTerminal().printLine("  ███████║███████║██║     █████╔╝ █████╗  ██████╔╝");
-        stateManager.getTerminal().printLine("  ██╔══██║██╔══██║██║     ██╔═██╗ ██╔══╝  ██╔══██╗");
-        stateManager.getTerminal().printLine("  ██║  ██║██║  ██║╚██████╗██║  ██╗███████╗██║  ██║");
-        stateManager.getTerminal().printLine("  ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝");
-        stateManager.getTerminal().printLine("");
-        stateManager.getTerminal().printLine("                    Version 1.0");
-        stateManager.getTerminal().printLine("");
-        stateManager.getTerminal().printLine("  Inicializando sistema de hackeo...");
-        stateManager.getTerminal().printLine("");
-    }
-
-    private void updateProgress(String filename, int progress) {
-        stateManager.getTerminal().printLine("  Cargando: " + filename + " [" + progress + "%]");
-        stateManager.getTerminal().printLine(progressBar.getProgressBar(progress, 50));
-    }
-
-    private void showPressAnyKey() {
-        stateManager.getTerminal().printLine("");
-        stateManager.getTerminal().printLine("  Sistema cargado exitosamente.");
-        stateManager.getTerminal().printLine("");
-        stateManager.getTerminal().printLine("  [PRESIONE CUALQUIER TECLA PARA CONTINUAR]");
+        // Escucha de teclas para pasar al menú cuando se complete la carga
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(event -> {
+            if (loadingComplete && event.getID() == KeyEvent.KEY_PRESSED) {
+                stateManager.setState("Menu");
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
     public void update() {
-        if (loadingComplete && keyPressed) {
-            stateManager.setState(new MenuState(stateManager));
-        }
+        // Nada especial, solo dejamos que el Timer controle el progreso
     }
 
     @Override
-    public void render() {
-        // La renderización se maneja en TerminalUI
-    }
+    public void render(Graphics2D g2d) {
+        // Fondo negro estilo hacker
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect(0, 0, 700, 500);
 
-    @Override
-    public void exit() {
-        // Limpiar recursos si es necesario
-    }
+        // Título del juego
+        g2d.setColor(Color.GREEN);
+        g2d.setFont(new Font("Monospaced", Font.BOLD, 36));
+        g2d.drawString("PuzzleHacker", 200, 200);
 
-    @Override
-    public void keyPressed(KeyEvent e) {
+        // Barra de progreso animada
+        progressBar.render(g2d, 100, 250, progress);
+
+        // Texto de indicación
         if (loadingComplete) {
-            keyPressed = true;
+            g2d.setFont(new Font("Monospaced", Font.PLAIN, 18));
+            g2d.setColor(Color.WHITE);
+            g2d.drawString("Presione cualquier tecla para comenzar", 150, 320);
         }
+    }
+
+    @Override
+    public void handleInput(String input) {
+        // No se maneja input de texto en Splash
     }
 }

@@ -1,65 +1,72 @@
-// src/com/puzzlehacker/core/Game.java
 package com.puzzlehacker.core;
 
 import com.puzzlehacker.states.*;
-import com.puzzlehacker.ui.TerminalUI;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
-public class Game extends JFrame implements KeyListener {
-    public static final int WINDOW_WIDTH = 900;
-    public static final int WINDOW_HEIGHT = 500;
+public class Game extends JPanel implements Runnable {
+
+    // Dimensiones de la ventana estilo terminal
+    public static final int WIDTH = 700;
+    public static final int HEIGHT = 500;
+
+    private Thread thread;
+    private boolean running;
 
     private StateManager stateManager;
-    private TerminalUI terminal;
-    private boolean running;
-    private String currentLanguage = "es";
-    private String currentTextColor = "GREEN";
 
     public Game() {
-        setupWindow();
-        setupTerminal();
-        setupStateManager();
-    }
-
-    private void setupWindow() {
-        setTitle("PuzzleHacker v1.0");
-        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setResizable(false);
-        addKeyListener(this);
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setFocusable(true);
+        requestFocus();
 
-        // Fondo negro estilo terminal
-        getContentPane().setBackground(Color.BLACK);
-    }
+        // Fondo oscuro estilo hacker
+        setBackground(Color.BLACK);
 
-    private void setupTerminal() {
-        terminal = new TerminalUI();
-        add(terminal);
-    }
+        // Inicializamos gestor de estados
+        stateManager = new StateManager();
 
-    private void setupStateManager() {
-        stateManager = new StateManager(this, terminal);
-        stateManager.setState(new SplashState(stateManager));
+        // Estados del juego
+        stateManager.addState(new SplashState(stateManager));
+        stateManager.addState(new MenuState(stateManager));
+        stateManager.addState(new PlayState(stateManager));
+        stateManager.addState(new SettingsState(stateManager));
+        stateManager.addState(new CreditsState(stateManager));
+
+        // Estado inicial
+        stateManager.setState("Splash");
     }
 
     public void start() {
-        running = true;
-        setVisible(true);
-        gameLoop();
+        if (thread == null || !running) {
+            running = true;
+            thread = new Thread(this);
+            thread.start();
+        }
     }
 
-    private void gameLoop() {
+    @Override
+    public void run() {
+        // Loop a 60 FPS
+        final double FPS = 60.0;
+        final double nsPerFrame = 1_000_000_000.0 / FPS;
+
+        long lastTime = System.nanoTime();
+        double delta = 0;
+
         while (running) {
-            update();
-            render();
+            long now = System.nanoTime();
+            delta += (now - lastTime) / nsPerFrame;
+            lastTime = now;
+
+            while (delta >= 1) {
+                update();
+                repaint();
+                delta--;
+            }
+
             try {
-                Thread.sleep(16); // ~60 FPS
+                Thread.sleep(2);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -67,57 +74,22 @@ public class Game extends JFrame implements KeyListener {
     }
 
     private void update() {
-        if (stateManager.getCurrentState() != null) {
-            stateManager.getCurrentState().update();
-        }
-    }
-
-    private void render() {
-        repaint();
-    }
-
-    public void stop() {
-        running = false;
-        dispose();
-        System.exit(0);
-    }
-
-    // Getters y Setters
-    public String getCurrentLanguage() {
-        return currentLanguage;
-    }
-
-    public void setCurrentLanguage(String language) {
-        this.currentLanguage = language;
-    }
-
-    public String getCurrentTextColor() {
-        return currentTextColor;
-    }
-
-    public void setCurrentTextColor(String color) {
-        this.currentTextColor = color;
-        terminal.setTextColor(color);
+        stateManager.update();
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-        if (stateManager.getCurrentState() != null) {
-            stateManager.getCurrentState().keyTyped(e);
-        }
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // Render con Graphics2D (mejor calidad y tipografía clara)
+        Graphics2D g2d = (Graphics2D) g;
+        stateManager.render(g2d);
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (stateManager.getCurrentState() != null) {
-            stateManager.getCurrentState().keyPressed(e);
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        if (stateManager.getCurrentState() != null) {
-            stateManager.getCurrentState().keyReleased(e);
+    // Manejo de entrada desde TerminalUI
+    public void handleInput(String input) {
+        if (stateManager.getCurrentState() instanceof PlayState playState) {
+            playState.handleCommand(input);
         }
     }
 }

@@ -1,65 +1,52 @@
-// src/com/puzzlehacker/core/StateManager.java
 package com.puzzlehacker.core;
 
-import com.puzzlehacker.ui.TerminalUI;
+import com.puzzlehacker.states.GameState;
+
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StateManager {
+
+    private final Map<String, GameState> states;
     private GameState currentState;
-    private Game game;
-    private TerminalUI terminal;
-    private int currentLevel = 1;
-    private boolean[] levelsCompleted = new boolean[7]; // 6 niveles + índice 0
 
-    public StateManager(Game game, TerminalUI terminal) {
-        this.game = game;
-        this.terminal = terminal;
+    public StateManager() {
+        states = new HashMap<>();
     }
 
-    public void setState(GameState newState) {
-        if (currentState != null) {
-            currentState.exit();
-        }
-        currentState = newState;
-        if (currentState != null) {
-            currentState.enter();
+    // Añadir un nuevo estado al gestor
+    public void addState(GameState state) {
+        states.put(state.getName(), state);
+    }
+
+    // Cambiar entre estados
+    public void setState(String name) {
+        GameState newState = states.get(name);
+        if (newState != null) {
+            currentState = newState;
+            currentState.enter(); // Acción al entrar al estado
+        } else {
+            System.err.println("⚠️ Estado no encontrado: " + name);
         }
     }
 
+    // Obtener el estado actual
     public GameState getCurrentState() {
         return currentState;
     }
 
-    public Game getGame() {
-        return game;
-    }
-
-    public TerminalUI getTerminal() {
-        return terminal;
-    }
-
-    public int getCurrentLevel() {
-        return currentLevel;
-    }
-
-    public void setCurrentLevel(int level) {
-        this.currentLevel = level;
-    }
-
-    public boolean isLevelCompleted(int level) {
-        if (level < 1 || level > 6) return false;
-        return levelsCompleted[level];
-    }
-
-    public void markLevelCompleted(int level) {
-        if (level >= 1 && level <= 6) {
-            levelsCompleted[level] = true;
+    // Actualizar estado actual
+    public void update() {
+        if (currentState != null) {
+            currentState.update();
         }
     }
 
-    public boolean hasProgress() {
-        for (int i = 1; i <= 6; i++) {
-            if (levelsCompleted[i]) return true;
+    // Renderizar estado actual
+    public void render(Graphics2D g2d) {
+        if (currentState != null) {
+            currentState.render(g2d);
         }
-        return false;
     }
 }
