@@ -1,0 +1,780 @@
+:root{
+  --ubuntu-purple:#772953;
+  --ubuntu-orange:#E95420;
+  --ubuntu-dark:#2C001E;
+  --ubuntu-sidebar:#300A24;
+  --ubuntu-panel:#3d3846;
+  --ubuntu-bg:#1A0416;
+  --ubuntu-text:#F6F5F4;
+  --ubuntu-muted:#C0BFBC;
+  --ubuntu-accent:#E95420;
+  --ubuntu-success:#26A269;
+  --ubuntu-warning:#F5C211;
+  --ubuntu-danger:#C01C28;
+  --glow-purple:rgba(119,41,83,0.4);
+  --glow-orange:rgba(233,84,32,0.3);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  height:100%;
+  font-family:'Ubuntu',system-ui,-apple-system,sans-serif;
+  color:var(--ubuntu-text);
+  background:linear-gradient(135deg,var(--ubuntu-bg) 0%,var(--ubuntu-dark) 50%,#1a0520 100%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* Particles background */
+.particles{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  pointer-events:none;
+  z-index:0;
+  opacity:0.3;
+}
+.particle{
+  position:absolute;
+  width:3px;height:3px;
+  background:var(--ubuntu-orange);
+  border-radius:50%;
+  animation:float-particle 20s infinite ease-in-out;
+  box-shadow:0 0 10px var(--glow-orange);
+}
+@keyframes float-particle{
+  0%,100%{transform:translate(0,0) scale(1);opacity:0.3}
+  50%{transform:translate(var(--tx),var(--ty)) scale(1.5);opacity:0.8}
+}
+
+.app{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:0;
+  max-width:1400px;
+  margin:0 auto;
+  min-height:100vh;
+  position:relative;
+  z-index:1;
+}
+@media (max-width:920px){.app{grid-template-columns:1fr}}
+
+/* Sidebar - Ubuntu launcher style */
+.sidebar{
+  background:linear-gradient(180deg,var(--ubuntu-sidebar) 0%,rgba(48,10,36,0.95) 100%);
+  backdrop-filter:blur(20px);
+  border-right:1px solid rgba(119,41,83,0.3);
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  box-shadow:4px 0 30px rgba(119,41,83,0.2);
+  position:relative;
+  overflow:hidden;
+}
+.sidebar::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:radial-gradient(circle at top left,var(--glow-purple),transparent 60%);
+  pointer-events:none;
+}
+
+.logo{
+  padding:24px 20px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  position:relative;
+}
+.logo-icon{
+  width:48px;height:48px;
+  background:linear-gradient(135deg,var(--ubuntu-orange),#ff6d3a);
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  box-shadow:0 8px 24px var(--glow-orange),inset 0 -2px 8px rgba(0,0,0,0.3);
+  animation:glow-pulse 3s ease-in-out infinite;
+}
+@keyframes glow-pulse{
+  0%,100%{box-shadow:0 8px 24px var(--glow-orange),inset 0 -2px 8px rgba(0,0,0,0.3)}
+  50%{box-shadow:0 12px 36px rgba(233,84,32,0.6),inset 0 -2px 8px rgba(0,0,0,0.3)}
+}
+.logo-text h2{
+  font-size:18px;
+  font-weight:700;
+  color:var(--ubuntu-text);
+  margin-bottom:4px;
+}
+.logo-text .subtitle{
+  font-size:12px;
+  color:var(--ubuntu-muted);
+  opacity:0.8;
+}
+
+.nav{
+  padding:16px 12px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  flex:1;
+}
+.nav button{
+  background:transparent;
+  border:0;
+  text-align:left;
+  padding:14px 16px;
+  border-radius:10px;
+  color:var(--ubuntu-muted);
+  cursor:pointer;
+  font-size:15px;
+  font-weight:500;
+  transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.nav button::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:50%;
+  transform:translateY(-50%);
+  width:3px;
+  height:0;
+  background:var(--ubuntu-orange);
+  border-radius:0 3px 3px 0;
+  transition:height 0.25s ease;
+}
+.nav button:hover{
+  background:rgba(233,84,32,0.12);
+  color:var(--ubuntu-text);
+  transform:translateX(4px);
+}
+.nav button:hover::before{height:70%}
+.nav button:active{transform:translateX(4px) scale(0.98)}
+
+.status{
+  margin:16px 12px;
+  padding:16px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
+  backdrop-filter:blur(10px);
+}
+.status-title{
+  font-size:13px;
+  color:var(--ubuntu-muted);
+  margin-bottom:12px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.meter{
+  height:8px;
+  background:rgba(0,0,0,0.3);
+  border-radius:999px;
+  overflow:hidden;
+  position:relative;
+}
+.meter > i{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,var(--ubuntu-orange),#ff8c5a);
+  width:0%;
+  transition:width 0.6s cubic-bezier(0.65,0,0.35,1);
+  box-shadow:0 0 12px var(--glow-orange);
+  position:relative;
+}
+.meter > i::after{
+  content:'';
+  position:absolute;
+  top:0;right:0;
+  width:40%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4));
+  animation:shimmer 2s infinite;
+}
+@keyframes shimmer{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
+}
+.meter-label{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:8px;
+  font-size:13px;
+  color:var(--ubuntu-muted);
+}
+
+/* Main window */
+.window{
+  display:flex;
+  flex-direction:column;
+  padding:20px;
+  gap:16px;
+}
+
+/* Top bar - Ubuntu style */
+.topbar{
+  background:linear-gradient(180deg,var(--ubuntu-panel),rgba(61,56,70,0.95));
+  backdrop-filter:blur(20px);
+  border-radius:12px;
+  padding:16px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.05);
+  position:relative;
+  overflow:hidden;
+}
+.topbar::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(233,84,32,0.05),transparent);
+  animation:scan 3s infinite;
+}
+@keyframes scan{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
+}
+.win-controls{
+  display:flex;
+  gap:10px;
+}
+.circle{
+  width:13px;height:13px;
+  border-radius:50%;
+  cursor:pointer;
+  transition:transform 0.2s ease;
+  box-shadow:inset 0 -1px 2px rgba(0,0,0,0.3),0 2px 4px rgba(0,0,0,0.2);
+}
+.circle:hover{transform:scale(1.15)}
+.c-red{background:linear-gradient(135deg,#ff5f57,#e81123)}
+.c-yellow{background:linear-gradient(135deg,#ffbd2e,#f5a623)}
+.c-green{background:linear-gradient(135deg,#28ca42,#26a269)}
+
+.topbar-title{
+  flex:1;
+  margin-left:16px;
+}
+.topbar-title h1{
+  font-size:18px;
+  font-weight:700;
+  color:var(--ubuntu-text);
+  margin-bottom:4px;
+}
+.topbar-title .subtitle{
+  font-size:13px;
+  color:var(--ubuntu-muted);
+}
+.shortcuts{
+  font-family:'Ubuntu Mono',monospace;
+  font-size:12px;
+  color:var(--ubuntu-muted);
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.kbd{
+  background:rgba(0,0,0,0.4);
+  padding:4px 8px;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Main content */
+.scene{
+  display:grid;
+  grid-template-columns:1fr 380px;
+  gap:20px;
+  flex:1;
+}
+@media (max-width:1100px){.scene{grid-template-columns:1fr}}
+
+.stage{
+  background:linear-gradient(135deg,rgba(61,56,70,0.7),rgba(48,10,36,0.7));
+  backdrop-filter:blur(20px);
+  border-radius:16px;
+  padding:28px;
+  border:1px solid rgba(119,41,83,0.3);
+  box-shadow:0 8px 32px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.05);
+  position:relative;
+  overflow:hidden;
+  min-height:500px;
+  display:flex;
+  flex-direction:column;
+}
+.stage::before{
+  content:'';
+  position:absolute;
+  top:0;right:0;
+  width:200px;height:200px;
+  background:radial-gradient(circle,var(--glow-purple),transparent);
+  pointer-events:none;
+}
+
+.chapter-badge{
+  display:inline-block;
+  padding:6px 12px;
+  background:linear-gradient(135deg,var(--ubuntu-orange),#ff6d3a);
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+  color:#fff;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  margin-bottom:16px;
+  box-shadow:0 4px 12px var(--glow-orange);
+  animation:badge-enter 0.5s cubic-bezier(0.68,-0.55,0.265,1.55);
+}
+@keyframes badge-enter{
+  from{opacity:0;transform:scale(0.5) rotate(-10deg)}
+  to{opacity:1;transform:scale(1) rotate(0)}
+}
+
+.stage-title{
+  font-size:28px;
+  font-weight:700;
+  color:var(--ubuntu-text);
+  margin-bottom:20px;
+  animation:slide-in 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+}
+@keyframes slide-in{
+  from{opacity:0;transform:translateX(-30px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+.stage-text{
+  font-size:16px;
+  line-height:1.7;
+  color:var(--ubuntu-text);
+  margin-bottom:24px;
+  animation:fade-in 0.8s ease;
+  flex:1;
+}
+@keyframes fade-in{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.choices{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-top:auto;
+}
+.choice{
+  background:linear-gradient(135deg,rgba(61,56,70,0.6),rgba(48,10,36,0.6));
+  backdrop-filter:blur(10px);
+  border:2px solid rgba(233,84,32,0.2);
+  padding:16px 20px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+  position:relative;
+  overflow:hidden;
+  animation:choice-enter 0.5s cubic-bezier(0.68,-0.55,0.265,1.55) backwards;
+}
+.choice:nth-child(1){animation-delay:0.1s}
+.choice:nth-child(2){animation-delay:0.2s}
+.choice:nth-child(3){animation-delay:0.3s}
+.choice:nth-child(4){animation-delay:0.4s}
+@keyframes choice-enter{
+  from{opacity:0;transform:translateY(20px) scale(0.95)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.choice::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:linear-gradient(135deg,var(--ubuntu-orange),#ff6d3a);
+  opacity:0;
+  transition:opacity 0.3s ease;
+}
+.choice:hover{
+  border-color:var(--ubuntu-orange);
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:0 12px 32px var(--glow-orange);
+}
+.choice:hover::before{opacity:0.15}
+.choice:active{transform:translateY(-2px) scale(1)}
+.choice-content{position:relative;z-index:1}
+.choice-number{
+  font-weight:700;
+  color:var(--ubuntu-orange);
+  margin-right:8px;
+}
+
+.input-row{
+  display:flex;
+  gap:12px;
+  margin-top:16px;
+  animation:fade-in 0.6s ease;
+}
+input[type="text"],input[type="number"]{
+  flex:1;
+  padding:14px 18px;
+  border-radius:10px;
+  border:2px solid rgba(233,84,32,0.2);
+  background:rgba(0,0,0,0.3);
+  color:var(--ubuntu-text);
+  font-size:15px;
+  font-family:'Ubuntu Mono',monospace;
+  transition:all 0.3s ease;
+}
+input:focus{
+  outline:none;
+  border-color:var(--ubuntu-orange);
+  box-shadow:0 0 0 4px var(--glow-orange);
+}
+
+.btn{
+  padding:14px 24px;
+  border-radius:10px;
+  border:0;
+  background:linear-gradient(135deg,var(--ubuntu-orange),#ff6d3a);
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
+  cursor:pointer;
+  transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:0 4px 16px var(--glow-orange);
+  position:relative;
+  overflow:hidden;
+}
+.btn::before{
+  content:'';
+  position:absolute;
+  top:0;left:-100%;
+  width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+  transition:left 0.5s ease;
+}
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px var(--glow-orange);
+}
+.btn:hover::before{left:100%}
+.btn:active{transform:translateY(0)}
+.btn.ghost{
+  background:transparent;
+  border:2px solid rgba(233,84,32,0.4);
+  color:var(--ubuntu-orange);
+  box-shadow:none;
+}
+.btn.ghost:hover{
+  background:rgba(233,84,32,0.1);
+  border-color:var(--ubuntu-orange);
+}
+
+.stage-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:24px;
+  padding-top:20px;
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+.lives{
+  font-size:20px;
+  display:flex;
+  gap:6px;
+}
+.lives i{
+  /* Asegura que los iconos de corazón tengan el mismo tamaño y color */
+  font-size:20px;
+  line-height:1;
+  color:var(--ubuntu-danger); /* Color para los corazones llenos (❤️) */
+}
+.lives .far{
+  color:var(--ubuntu-muted); /* Color para los corazones vacíos (🖤) */
+}
+.heart{
+  display:inline-block;
+  animation:heart-beat 1.5s ease infinite;
+}
+@keyframes heart-beat{
+  0%,100%{transform:scale(1)}
+  10%{transform:scale(1.1)}
+  20%{transform:scale(1)}
+}
+
+/* Sidebar info panels */
+.info{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.card{
+  background:linear-gradient(135deg,rgba(61,56,70,0.7),rgba(48,10,36,0.7));
+  backdrop-filter:blur(20px);
+  border-radius:12px;
+  padding:20px;
+  border:1px solid rgba(119,41,83,0.3);
+  box-shadow:0 4px 16px rgba(0,0,0,0.3);
+  transition:transform 0.3s ease;
+}
+.card:hover{transform:translateY(-4px)}
+.card-title{
+  font-size:14px;
+  color:var(--ubuntu-muted);
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  margin-bottom:12px;
+}
+.card-content{
+  color:var(--ubuntu-text);
+}
+
+.protagonist{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+.avatar{
+  width:56px;height:56px;
+  background:linear-gradient(135deg,var(--ubuntu-orange),#ff6d3a);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  box-shadow:0 4px 16px var(--glow-orange);
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+.protagonist-info h3{
+  font-size:16px;
+  color:var(--ubuntu-text);
+  margin-bottom:4px;
+}
+.protagonist-info p{
+  font-size:13px;
+  color:var(--ubuntu-muted);
+}
+
+.log{
+  max-height:200px;
+  overflow-y:auto;
+  font-family:'Ubuntu Mono',monospace;
+  font-size:13px;
+  color:var(--ubuntu-muted);
+  background:rgba(0,0,0,0.3);
+  padding:12px;
+  border-radius:8px;
+  line-height:1.6;
+}
+.log::-webkit-scrollbar{width:6px}
+.log::-webkit-scrollbar-track{background:rgba(0,0,0,0.2);border-radius:3px}
+.log::-webkit-scrollbar-thumb{background:var(--ubuntu-orange);border-radius:3px}
+
+.hints{
+  list-style:none;
+  padding:0;
+}
+.hints li{
+  padding:8px 0;
+  padding-left:24px;
+  position:relative;
+  color:var(--ubuntu-muted);
+  font-size:14px;
+}
+.hints li::before{
+  content:'▸';
+  position:absolute;
+  left:0;
+  color:var(--ubuntu-orange);
+  font-weight:700;
+}
+
+/* Modal */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(8px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9998;
+  animation:modal-fade-in 0.3s ease;
+}
+@keyframes modal-fade-in{
+  from{opacity:0}
+  to{opacity:1}
+}
+.modal-box{
+  width:min(900px,94%);
+  max-height:85vh;
+  overflow-y:auto;
+  background:linear-gradient(135deg,var(--ubuntu-panel),rgba(48,10,36,0.98));
+  backdrop-filter:blur(20px);
+  border-radius:16px;
+  padding:32px;
+  border:1px solid rgba(119,41,83,0.4);
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+  animation:modal-slide-up 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+}
+@keyframes modal-slide-up{
+  from{opacity:0;transform:translateY(40px) scale(0.95)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.modal-box::-webkit-scrollbar{width:8px}
+.modal-box::-webkit-scrollbar-track{background:rgba(0,0,0,0.2);border-radius:4px}
+.modal-box::-webkit-scrollbar-thumb{background:var(--ubuntu-orange);border-radius:4px}
+
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:24px;
+  padding-bottom:16px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.modal-header h3{
+  font-size:24px;
+  color:var(--ubuntu-text);
+}
+
+.exercise-item{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(233,84,32,0.2);
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:16px;
+  transition:all 0.3s ease;
+}
+.exercise-item:hover{
+  border-color:var(--ubuntu-orange);
+  transform:translateX(4px);
+}
+.exercise-title{
+  font-size:18px;
+  font-weight:700;
+  color:var(--ubuntu-orange);
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.exercise-prompt{
+  font-size:15px;
+  color:var(--ubuntu-text);
+  line-height:1.6;
+  white-space:pre-wrap;
+  margin-bottom:16px;
+}
+.math-formula{
+  background:rgba(0,0,0,0.3);
+  padding:12px 16px;
+  border-radius:8px;
+  font-family:'Ubuntu Mono',monospace;
+  font-size:16px;
+  color:var(--ubuntu-orange);
+  margin:12px 0;
+  border-left:3px solid var(--ubuntu-orange);
+}
+
+/* Visual graphics for exercises */
+.set-diagram{
+  display:flex;
+  gap:20px;
+  align-items:center;
+  justify-content:center;
+  margin:20px 0;
+  padding:20px;
+  background:rgba(0,0,0,0.2);
+  border-radius:12px;
+}
+.set-circle{
+  width:120px;
+  height:120px;
+  border:3px solid var(--ubuntu-orange);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  font-weight:700;
+  color:var(--ubuntu-text);
+  position:relative;
+  background:radial-gradient(circle,rgba(233,84,32,0.1),transparent);
+  animation:pulse-set 2s ease-in-out infinite;
+}
+@keyframes pulse-set{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+}
+.set-label{
+  position:absolute;
+  top:-30px;
+  font-size:20px;
+  font-weight:700;
+  color:var(--ubuntu-orange);
+}
+
+.induction-steps{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  margin:20px 0;
+}
+.induction-step{
+  background:rgba(0,0,0,0.2);
+  border-left:4px solid var(--ubuntu-orange);
+  padding:16px;
+  border-radius:8px;
+  animation:step-appear 0.5s ease backwards;
+}
+.induction-step:nth-child(1){animation-delay:0.1s}
+.induction-step:nth-child(2){animation-delay:0.2s}
+.induction-step:nth-child(3){animation-delay:0.3s}
+@keyframes step-appear{
+  from{opacity:0;transform:translateX(-20px)}
+  to{opacity:1;transform:translateX(0)}
+}
+.step-title{
+  font-weight:700;
+  color:var(--ubuntu-orange);
+  margin-bottom:8px;
+}
+
+/* Toast notifications */
+.toast{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  padding:16px 24px;
+  border-radius:12px;
+  color:#fff;
+  font-weight:600;
+  z-index:9999;
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  animation:toast-enter 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+}
+@keyframes toast-enter{
+  from{opacity:0;transform:translateY(20px) scale(0.8)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+.shake{animation:shake 0.5s ease}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-10px) rotate(-2deg)}
+  75%{transform:translateX(10px) rotate(2deg)}
+}
+
+.small{font-size:13px;color:var(--ubuntu-muted)}
+.center{text-align:center}
+hr{border:none;height:1px;background:rgba(255,255,255,0.1);margin:16px 0}
