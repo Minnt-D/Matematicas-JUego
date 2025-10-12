@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>El Enigma del Gato del Campus — Ubuntu Purple Edition</title>
+  <meta name="description" content="Juego educativo con ejercicios de matemáticas discretas en interfaz Ubuntu" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40wLwde6S9UuFh74+GfQx49Lw8aC0x4e+Kk2tS9W8j1W1b04y49g+Oq4uQx29K1eRjG2L5F0P4g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+
+  <div class="app" id="app">
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon"><i class="fas fa-cat"></i></div>
+        <div class="logo-text">
+          <h2>Neko Enigma</h2>
+          <div class="subtitle">Aventura Matemática</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button id="btnStart"><i class="fas fa-play"></i> Continuar Aventura</button>
+        <button id="btnChapters"><i class="fas fa-book"></i> Capítulos</button>
+        <button id="btnExercises"><i class="fas fa-calculator"></i> Terminal de Práctica</button>
+        <button id="btnSettings"><i class="fas fa-cog"></i> Configuración</button>
+      </nav>
+
+      <div class="status">
+        <div class="status-title">Progreso de Neko</div>
+        <div class="meter"><i id="meterBar"></i></div>
+        <div class="meter-label">
+          <span id="meterText">0/4</span>
+          <span><i class="fas fa-bullseye"></i></span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="window">
+      <div class="topbar">
+        <div style="display:flex;align-items:center;gap:16px;flex:1">
+          <div class="win-controls">
+            <div class="circle c-red"></div>
+            <div class="circle c-yellow"></div>
+            <div class="circle c-green"></div>
+          </div>
+          <div class="topbar-title">
+            <h1>El Enigma del Gato del Campus</h1>
+            <div class="subtitle">Ubuntu Purple Edition • Matemáticas Discretas</div>
+          </div>
+        </div>
+        <div class="shortcuts">
+          <span class="kbd">1-4</span> elegir
+          <span class="kbd">Enter</span> enviar
+          <span class="kbd">R</span> reiniciar
+        </div>
+      </div>
+
+      <section class="scene">
+        <div class="stage" id="stage">
+          <div class="chapter-badge" id="chapterBadge">Capítulo 1</div>
+          <div class="stage-title" id="stageTitle">Bienvenido</div>
+          <div class="stage-text" id="stageText">Cargando aventura...</div>
+          <div class="choices" id="stageChoices"></div>
+          
+          <div class="stage-footer">
+            <div>
+              <div class="small" style="margin-bottom:4px">Vidas de Neko</div>
+              <div class="lives" id="lives"><i class="fas fa-heart"></i><i class="fas fa-heart"></i><i class="fas fa-heart"></i></div>
+            </div>
+            <div style="display:flex;gap:12px">
+              <button class="btn ghost" id="saveBtn"><i class="fas fa-save"></i> Guardar</button>
+              <button class="btn" id="nextBtn">Siguiente <i class="fas fa-arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="info">
+          <div class="card">
+            <div class="protagonist">
+              <div class="avatar"><i class="fas fa-cat"></i></div>
+              <div class="protagonist-info">
+                <h3>Neko</h3>
+                <p>El gato hacker matemático</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Registro del Sistema</div>
+            <div class="log" id="log">— Sistema iniciado —</div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Pistas</div>
+            <ul class="hints">
+              <li>Lee cada problema con atención</li>
+              <li>Los ejercicios no afectan tus vidas</li>
+              <li>Usa los atajos de teclado</li>
+              <li>Practica en la Terminal cuando quieras</li>
+            </ul>
+          </div>
+
+          <div class="card center">
+            <button class="btn" id="gotoExercises" style="width:100%"><i class="fas fa-calculator"></i> Abrir Terminal</button>
+          </div>
+        </aside>
+      </section>
+
+      <div style="padding:16px;display:flex;justify-content:space-between;align-items:center">
+        <div class="small">Hecho con <i class="fas fa-heart"></i> por Alejandro Galvis</div>
+        <div class="small">v2.1 Purple Edition</div>
+      </div>
+    </main>
+  </div>
+
+  <div id="modalRoot"></div>
+  <div id="toastRoot"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
