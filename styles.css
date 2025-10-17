@@ -53,7 +53,7 @@ html,body{
   gap:0;
   max-width:1400px;
   margin:0 auto;
-  min-height:100vh;
+  min-height:90vh;
   position:relative;
   z-index:1;
 }
@@ -489,13 +489,12 @@ input:focus{
   gap:6px;
 }
 .lives i{
-  /* Asegura que los iconos de corazón tengan el mismo tamaño y color */
   font-size:20px;
   line-height:1;
-  color:var(--ubuntu-danger); /* Color para los corazones llenos (❤️) */
+  color:var(--ubuntu-danger);
 }
 .lives .far{
-  color:var(--ubuntu-muted); /* Color para los corazones vacíos (🖤) */
+  color:var(--ubuntu-muted);
 }
 .heart{
   display:inline-block;
@@ -529,9 +528,6 @@ input:focus{
   text-transform:uppercase;
   letter-spacing:0.5px;
   margin-bottom:12px;
-}
-.card-content{
-  color:var(--ubuntu-text);
 }
 
 .protagonist{
@@ -777,4 +773,39 @@ input:focus{
 
 .small{font-size:13px;color:var(--ubuntu-muted)}
 .center{text-align:center}
-hr{border:none;height:1px;background:rgba(255,255,255,0.1);margin:16px 0}
+
+.puzzle-piece{
+  display:inline-block;
+  font-size:32px;
+  margin:0 8px;
+  animation:piece-glow 2s ease-in-out infinite;
+}
+@keyframes piece-glow{
+  0%,100%{filter:drop-shadow(0 0 5px var(--ubuntu-orange))}
+  50%{filter:drop-shadow(0 0 15px var(--ubuntu-orange))}
+}
+
+.progress-bar{
+  background:rgba(0,0,0,0.3);
+  height:24px;
+  border-radius:12px;
+  overflow:hidden;
+  margin:16px 0;
+  position:relative;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--ubuntu-success),#33d17a);
+  transition:width 0.6s ease;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-weight:700;
+  font-size:12px;
+}
+
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.1)}
+}
