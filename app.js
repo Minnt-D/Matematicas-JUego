@@ -143,7 +143,7 @@ Completa los 10 ejercicios de INDUCCIÓN para recuperar la pieza 🧩`,
         prompt: 'Para n=1, verifica ∑(i=1 hasta 1) i = 1(1+1)/2. ¿Cuál es el resultado?',
         answer: '1',
         hint: 'Sustituye n=1 en la fórmula',
-        explanation: '1(2)/2 = 1 ✓ El caso base es verdadero'
+        explanation: '1(2)/2 = 1 El caso base es verdadero'
       },
       {
         type: 'choice',
@@ -159,7 +159,7 @@ Completa los 10 ejercicios de INDUCCIÓN para recuperar la pieza 🧩`,
         type: 'choice',
         prompt: 'Para probar ∑(i=1 hasta n) i = n(n+1)/2 por inducción, el caso base es:',
         choices: [
-          {text: 'n=1: 1 = 1(2)/2 ✓', correct: true},
+          {text: 'n=1: 1 = 1(2)/2', correct: true},
           {text: 'n=0: 0 = 0', correct: false},
           {text: 'n=2: 3 = 2(3)/2', correct: false}
         ],
@@ -197,7 +197,7 @@ Completa los 10 ejercicios de INDUCCIÓN para recuperar la pieza 🧩`,
         prompt: 'Para n=1, verifica: 2¹ = 2. ¿Es 2 > 1?',
         answer: 'si',
         hint: '¿2 es mayor que 1?',
-        explanation: 'Sí, 2 > 1 ✓ Caso base verdadero'
+        explanation: 'Sí, 2 > 1 Caso base verdadero'
       },
       {
         type: 'choice',
@@ -787,7 +787,7 @@ document.getElementById('btnChapters').addEventListener('click', () => showChapt
 document.getElementById('btnSettings').addEventListener('click', () => openSettings());
 document.getElementById('saveBtn').addEventListener('click', () => {
   save();
-  addLog('💾 Partida guardada');
+  addLog('<i class="fas fa-save"></i> Partida guardada');
   showToast('Juego guardado exitosamente', true);
 });
 document.getElementById('nextBtn').addEventListener('click', () => {
@@ -842,7 +842,7 @@ function reset() {
   };
   stopTimer();
   save();
-  addLog('🔄 Partida reiniciada');
+  addLog('<i class="fas fa-sync-alt"></i> Partida reiniciada');
   render();
 }
 
@@ -909,7 +909,7 @@ function renderExercise(ch) {
   if (exIndex >= ch.exercises.length) {
     // All exercises completed
     stopTimer();
-    stageText.textContent = `🎉 ¡Has completado todos los ejercicios!\n\nHas desbloqueado la pieza ${ch.piece}/7 🧩`;
+    stageText.innerHTML = `<i class="fas fa-trophy"></i> ¡Has completado todos los ejercicios!<br><br>Has desbloqueado la pieza ${ch.piece}/7 <i class="fas fa-puzzle-piece"></i>`;
     state.pieces[ch.piece - 1] = true;
     
     const btn = document.createElement('button');
@@ -936,7 +936,7 @@ function renderExercise(ch) {
   // Timer display
   const timerHTML = `
     <div style="text-align:center;margin:16px 0">
-      <div style="font-size:14px;color:var(--ubuntu-muted);margin-bottom:8px">⏱️ Tiempo restante</div>
+      <div style="font-size:14px;color:var(--ubuntu-muted);margin-bottom:8px"><i class="fas fa-hourglass-end"></i> Tiempo restante</div>
       <div id="timerDisplay" style="font-size:32px;font-weight:700;font-family:'Ubuntu Mono',monospace;color:var(--ubuntu-orange)">
         ${state.timeLimit}s
       </div>
@@ -998,15 +998,15 @@ function checkExercise(ch, ex, answer) {
   
   if (correct) {
     state.completedExercises[key]++;
-    addLog(`✅ Ejercicio ${state.completedExercises[key]}/${ch.exercises.length} correcto`);
-    showToast('✅ ' + ex.explanation, true);
+    addLog(`<i class="fas fa-check-circle"></i> Ejercicio ${state.completedExercises[key]}/${ch.exercises.length} correcto`);
+    showToast('<i class="fas fa-check-circle"></i> ' + ex.explanation, true);
     playTone(880, 'sine', 0.15);
     save();
     render();
   } else {
     state.lives--;
-    addLog(`❌ Respuesta incorrecta - Vida perdida`);
-    showToast('❌ Incorrecto. ' + (ex.hint || 'Intenta de nuevo'), false);
+    addLog(`<i class="fas fa-times-circle"></i> Respuesta incorrecta - Vida perdida`);
+    showToast('<i class="fas fa-times-circle"></i> Incorrecto. ' + (ex.hint || 'Intenta de nuevo'), false);
     playTone(220, 'sawtooth', 0.15);
     shakeStage();
     
@@ -1060,8 +1060,8 @@ function updateTimerDisplay() {
 
 function timeOut(ch, ex) {
   state.lives--;
-  addLog(`⏰ Tiempo agotado - Vida perdida`);
-  showToast('⏰ ¡Se acabó el tiempo! Pierdes una vida', false);
+  addLog(`<i class="fas fa-hourglass-end"></i> Tiempo agotado - Vida perdida`);
+  showToast('<i class="fas fa-hourglass-end"></i> ¡Se acabó el tiempo! Pierdes una vida', false);
   playTone(220, 'sawtooth', 0.15);
   shakeStage();
   
@@ -1083,41 +1083,57 @@ function nextChapter() {
 function gameOver() {
   stopTimer();
   chapterBadge.textContent = 'Game Over';
-  stageTitle.textContent = '💀 Neko ha fallado';
-  stageText.textContent = 'Has perdido todas tus vidas. El hacker ha escapado y el sistema permanece comprometido.\n\n¡Pero no te rindas! Puedes intentarlo de nuevo.';
-  stageChoices.innerHTML = '<div class="choice" onclick="reset()"><div class="choice-content">🔄 Reiniciar aventura</div></div>';
+  stageTitle.innerHTML = '<i class="fas fa-skull"></i> Neko ha fallado';
+  stageText.innerHTML = `
+    <p>Has perdido todas tus vidas. El hacker ha escapado y el sistema permanece comprometido.</p>
+    <p>¡Pero no te rindas! Puedes intentarlo de nuevo.</p>
+  `;
+  stageChoices.innerHTML = `
+    <div class="choice" onclick="reset()">
+      <div class="choice-content">
+        <i class="fas fa-sync-alt"></i> Reiniciar aventura
+      </div>
+    </div>
+  `;
   nextBtn.style.display = 'none';
   save();
 }
 
+
 function renderEpilogue() {
   chapterBadge.textContent = 'Epílogo';
-  stageTitle.textContent = '🎉 ¡Misión Completada!';
+  stageTitle.innerHTML = '<i class="fas fa-trophy"></i> ¡Misión Completada!';
   
   const allPieces = state.pieces.every(p => p);
   
   if (allPieces) {
-    stageText.innerHTML = `🎊 ¡FELICIDADES! 🎊
+    stageText.innerHTML = `
+      <h3><i class="fas fa-medal"></i> ¡FELICIDADES!</h3>
+      <p>Has recolectado las 7 piezas del enigma y atrapado al hacker.</p>
+      <ul style="list-style:none;padding-left:0;line-height:1.6em">
+        <li><i class="fas fa-check"></i> MeetPoint seguro</li>
+        <li><i class="fas fa-check"></i> Teams protegido</li>
+        <li><i class="fas fa-check"></i> Canvas LMS restaurado</li>
+        <li><i class="fas fa-check"></i> Firewall reforzado</li>
+        <li><i class="fas fa-check"></i> Base de datos limpia</li>
+        <li><i class="fas fa-check"></i> Código fuente protegido</li>
+        <li><i class="fas fa-check"></i> Inyecciones SQL bloqueadas</li>
+      </ul>
+      <p>Gracias a tus habilidades matemáticas, Jala University está a salvo.</p>`;
+    stageText.appendChild(document.createElement("p")).appendChild(icon);
+    stageText.lastChild.insertAdjacentText("beforeend", " Neko puede descansar... por ahora.");
 
-Has recolectado las 7 piezas del enigma y atrapado al hacker.
-
-El sistema universitario ha sido restaurado:
-✅ MeetPoint seguro
-✅ Teams protegido
-✅ Canvas LMS restaurado
-✅ Firewall reforzado
-✅ Base de datos limpia
-✅ Código fuente protegido
-✅ Inyecciones SQL bloqueadas
-
-Gracias a tus habilidades matemáticas, Jala University está a salvo.
-
-Neko puede descansar... por ahora. 😸`;
   } else {
     stageText.textContent = 'Has llegado al final, pero no recolectaste todas las piezas. Completa todos los ejercicios para atrapar al hacker.';
   }
   
-  stageChoices.innerHTML = '<div class="choice" onclick="reset()"><div class="choice-content">🔄 Jugar de nuevo</div></div>';
+  stageChoices.innerHTML = `
+  <div class="choice" onclick="reset()">
+    <div class="choice-content">
+      <i class="fas fa-sync-alt"></i> Jugar de nuevo
+    </div>
+  </div>
+  `;
   updateMeter();
   renderLog();
   renderLives();
@@ -1245,7 +1261,7 @@ window.gotoChapter = function(idx) {
     save();
     closeModal();
     render();
-    addLog(`📖 Revisando capítulo ${idx}`);
+    addLog(`<i class="fas fa-book"></i> Revisando capítulo ${idx}`);
     
     setTimeout(() => {
       state.chapterIndex = oldIndex;
@@ -1353,8 +1369,8 @@ function openSettings() {
       }
       
       save();
-      addLog(`⚙️ Configuración actualizada: ${state.maxLives} vidas, ${state.timeLimit}s por pregunta`);
-      showToast(`✅ Configuración guardada: ${state.maxLives} vidas, ${state.timeLimit}s`, true);
+      addLog(`<i class="fas fa-cog"></i> Configuración actualizada: ${state.maxLives} vidas, ${state.timeLimit}s por pregunta`);
+      showToast(`<i class="fas fa-check"></i> Configuración guardada: ${state.maxLives} vidas, ${state.timeLimit}s`, true);
       closeModal();
       render();
     });
@@ -1409,9 +1425,9 @@ if (!state.timeLimit) state.timeLimit = 60;
 if (!state.lives || state.lives === 3) state.lives = state.maxLives;
 
 if (state.log.length === 0) {
-  addLog('😸 Bienvenido a la aventura de Neko');
-  addLog('🎮 Sistema Ubuntu iniciado');
-  addLog('🔍 Misión: Encontrar al hacker infiltrado');
+  addLog('<i class="fas fa-cat"></i> Bienvenido a la aventura de Neko');
+  addLog('<i class="fas fa-terminal"></i> Sistema Ubuntu iniciado');
+  addLog('<i class="fas fa-search"></i> Misión: Encontrar al hacker infiltrado');
 }
 render();
 createParticles();
