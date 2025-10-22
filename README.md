@@ -1,7 +1,7 @@
 # El Enigma del Gato del Campus — Ubuntu Purple Edition
 
 **Autor:** Alejandro Galvis  
-**Versión:** 2.1 LTS (Interfaz inspirada en Ubuntu 24.04)  
+**Versión:** v3.2.5 Enhanced Edition (Interfaz inspirada en Ubuntu 24.04)  
 **Lenguajes:** HTML, CSS, JavaScript  
 **Licencia:** MIT  
 
